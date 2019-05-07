@@ -3,6 +3,8 @@ import './styles/App.scss';
 import Input from './components/Input';
 import LogicButtons from './components/LogicButtons';
 
+import Results from './components/Results';
+
 
 class Calculator extends Component {
     numberInput = React.createRef();
@@ -52,11 +54,8 @@ class Calculator extends Component {
             <section className="Calculator">
     <h1>Calculator</h1>
     <Input numberInputRef={this.numberInput} value={value} changeInput= {this.changeInputValue}/>
-    <LogicButtons  operators={operators}/>
-    <p>{!value ? 'write something': value}</p>
-    <p className="calculateValue">{calculateValue.map((e,i) => <span key={i}>{e}</span>)}</p>
-
-    <p className="result">{!result ? 'no results yet': result}</p>
+    <LogicButtons operators={operators}/>
+    <Results value={value} calculateValue={calculateValue} result = {result}/>
     </section>
         );
     };
