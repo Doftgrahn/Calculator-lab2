@@ -1,0 +1,76 @@
+.Calculator {
+    width: 50%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: lightblue;
+    margin: 0 auto;
+    border-radius: 20px;
+    box-shadow: 2px 2px black;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    h1 {
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin: 0;
+        border-bottom: 10px solid black;
+    }
+
+    .input__wrapper {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 20px;
+
+        input {
+            width: 100%;
+            border: none;
+            margin-top: 30px;
+            outline: none;
+            padding: 3px;
+        }
+
+        label {
+            margin-right: 20px;
+        }
+    }
+
+    button {
+        transition: 0.2s;
+        text-align: center;
+        font-size: 16px;
+        padding: 0 12px;
+        margin: 4px;
+        cursor: pointer;
+        border-radius: 20px;
+        border: none;
+
+        &:hover {
+            background-color: lightblue;
+            border-radius: 20px;
+        }
+    }
+
+    .calculateValue {
+        padding: 10px;
+
+        span {
+            margin-left: 5px;
+        }
+    }
+
+    .operator_wrapper {
+        box-shadow: 2px 2px black;
+        margin-top: 20px;
+        border-radius: 20px;
+        background-color: #b3416a;
+        padding: 20px;
+    }
+
+    .result {
+        padding: 10px;
+        margin-left: auto;
+    }
+}
