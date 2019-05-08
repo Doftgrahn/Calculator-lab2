@@ -8,6 +8,8 @@ import Results from "./components/Results";
 const CalculatorOperations = {
     "+": (previousValue, nextValue) => previousValue + nextValue,
     "-": (previousValue, nextValue) => previousValue - nextValue,
+    "/": (previousValue, nextValue) => previousValue / nextValue,
+    "*": (previousValue, nextValue) => previousValue * nextValue,
     "=": (previousValue, nextValue) => nextValue
 };
 
@@ -22,6 +24,8 @@ class Calculator extends Component {
             {oper: "+", event: () => this.performOperation("+")},
             {oper: "-", event: () => this.performOperation("-")},
             {oper: "=", event: () => this.performOperation("=")},
+            {oper: "/", event: () => this.performOperation("/")},
+            {oper: "*", event: () => this.performOperation("*")},
             {oper: "CE", event: () => this.resetValue()},
             {oper: "M+"},
             {oper: "M-"}
@@ -33,9 +37,10 @@ class Calculator extends Component {
     }
 
     changeInputValue = event => {
-        this.setState({value: +event.target.value}, () =>
-            console.log(this.state.value)
-        );
+        this.setState({
+            value: +event.target.value,
+            displayValue: +event.target.value
+        });
     };
 
     resetValue = () => {
@@ -73,6 +78,7 @@ class Calculator extends Component {
             waitingForOperand: true,
             operator: nextOperator
         });
+
         this.numberInput.current.focus();
     };
 
@@ -87,7 +93,7 @@ class Calculator extends Component {
     };
 
     render() {
-        let {value, operators, calculateValue, result} = this.state;
+        let {value, operators, displayValue} = this.state;
         return (
             <main className="Calculator">
                 <h1>Calculator</h1>
@@ -97,11 +103,7 @@ class Calculator extends Component {
                     changeInput={this.changeInputValue}
                 />
                 <LogicButtons operators={operators} />
-                <Results
-                    value={value}
-                    calculateValue={calculateValue}
-                    result={result}
-                />
+                <Results value={value} calculateValue={displayValue} />
             </main>
         );
     }

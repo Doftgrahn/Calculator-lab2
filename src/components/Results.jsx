@@ -1,10 +1,10 @@
 import React from "react";
 
-const Results = ({value, calculateValue, result}) => {
+const Results = ({value, displayValue}) => {
     return (
         <div className="result__wrapper">
-            <p className="calculateValue">{calculateValue}</p>
-            <p className="result">{!result ? "no results yet" : result}</p>
+            <p className="calculateValue">{!displayValue ? 'write stuff' : displayValue}</p>
+            <p>{!value ? 'no value' : value}</p>
         </div>
     );
 };
