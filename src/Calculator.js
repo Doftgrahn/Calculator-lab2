@@ -5,16 +5,23 @@ import LogicButtons from "./components/LogicButtons";
 
 import Results from "./components/Results";
 
+const CalculatorOperations = {
+    "+": (previousValue, nextValue) => previousValue + nextValue,
+    "-": (previousValue, nextValue) => previousValue - nextValue,
+    "=": (previousValue, nextValue) => nextValue
+};
+
 class Calculator extends Component {
     numberInput = React.createRef();
     state = {
-        value: "",
-        calculateValue: [],
-        result: "",
+        value: 0,
+        displayValue: "0",
+        operator: null,
+        waitingForOperand: false,
         operators: [
-            {oper: "+", event: event => this.plus(event)},
-            {oper: "-"},
-            {oper: "=", event: () => this.equalTo()},
+            {oper: "+", event: () => this.performOperation("+")},
+            {oper: "-", event: () => this.performOperation("-")},
+            {oper: "=", event: () => this.performOperation("=")},
             {oper: "CE", event: () => this.resetValue()},
             {oper: "M+"},
             {oper: "M-"}
@@ -26,25 +33,51 @@ class Calculator extends Component {
     }
 
     changeInputValue = event => {
-        this.setState({value: event.target.value});
+        this.setState({value: +event.target.value}, () =>
+            console.log(this.state.value)
+        );
     };
 
     resetValue = () => {
-        this.setState({value: ""});
-        this.setState({calculateValue: []});
+        this.setState({
+            value: "",
+            calculateValue: [],
+            result: ""
+        });
+
         this.numberInput.current.focus();
     };
 
-    plus = () => {
-        let {value, calculateValue} = this.state;
-        let listsTogether = [...calculateValue,value];
-        this.setState({calculateValue: listsTogether});
-
-        this.numberInput.current.focus();
-        this.setState({value: ""});
+    clearAll = () => {
+        this.setState({displayValue: "0"});
     };
 
-    equalTo = () => {
+    performOperation = nextOperator => {
+        let {value, displayValue, operator} = this.state;
+        const inputValue = parseFloat(displayValue);
+        if (value === 0) {
+            this.setState({value: inputValue});
+        } else if (operator) {
+            const currentValue = value || 0;
+            const newValue = CalculatorOperations[operator](
+                currentValue,
+                inputValue
+            );
+            console.log("hej", newValue);
+            this.setState({
+                value: newValue,
+                displayValue: String(newValue)
+            });
+        }
+        this.setState({
+            waitingForOperand: true,
+            operator: nextOperator
+        });
+        this.numberInput.current.focus();
+    };
+
+    equalTo = event => {
+        console.log(event.target);
         let {calculateValue} = this.state;
         let calculateResult = calculateValue.join("");
         this.setState({result: calculateResult}, () =>
@@ -75,3 +108,7 @@ class Calculator extends Component {
 }
 
 export default Calculator;
+
+//this.setState({value: ""});
+//this.numberInput.current.focus();
+//let listsTogether = [...calculateValue, value];

@@ -5,6 +5,7 @@ const Input = ({value, changeInput, numberInputRef}) => {
         <div className="input__wrapper">
             <label htmlFor="inputValue">Funky Calculator</label>
             <input
+                className="inputField"
                 autoComplete="off"
                 ref={numberInputRef}
                 type="text"
