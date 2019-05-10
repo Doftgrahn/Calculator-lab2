@@ -1,17 +1,14 @@
 import React from "react";
 
-const Results = ({value, savedResults, formerResults}) => {
+const Results = ({value, savedResults, finalResult}) => {
     return (
         <div className="result__wrapper">
-            <p className="calculateValue">
+            {/*<p className="calculateValue">
                 {value === null ? "write stuff" : value}
-            </p>
+            </p>*/}
 
             <>{!savedResults ? <span className="memory">you have nothing saved</span> : <span className="memory active">You have saved: {savedResults}</span>} </>
-
-
-<p>{formerResults.map((former,i) => <span key={i}>{former}</span>)}</p>
-
+            <p>{!finalResult ? 'nothing to see here': finalResult}</p>
         </div>
     );
 };

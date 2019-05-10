@@ -5,6 +5,8 @@ import LogicButtons from "./components/LogicButtons";
 
 import Results from "./components/Results";
 
+import FormerResults from "./components/FormerResults";
+
 const CalculatorOperations = {
     "+": (previousValue, nextValue) => previousValue + +nextValue,
     "-": (previousValue, nextValue) => previousValue - nextValue,
@@ -31,11 +33,12 @@ class Calculator extends Component {
             {oper: "M-", event: () => this.mMinus()}
         ],
         savedResults: null,
-        formerResults: []
+        formerResults: [],
+        finalResult: null
     };
 
     componentDidMount() {
-        this.numberInput.current.focus();
+        this.numberInput.current.select();
     }
 
     resetValue = () => {
@@ -43,7 +46,9 @@ class Calculator extends Component {
             value: null,
             displayvalue: "0",
             operator: null,
-            waitingForOperand: false
+            waitingForOperand: false,
+            savedResults: null,
+            formerResults: []
         });
         this.numberInput.current.select();
     };
@@ -67,24 +72,36 @@ class Calculator extends Component {
 
     performOperation = nextOperator => {
         const {displayvalue, value, operator, formerResults} = this.state;
-        const inputValue = displayvalue;
 
-        if (value === null) {
-            this.setState({value: inputValue});
+        if (value === null && operator === null) {
+            this.setState({value: displayvalue});
         } else if (operator) {
             const currentValue = value || 0;
-
             const newValue = CalculatorOperations[operator](
                 currentValue,
-                inputValue
+                displayvalue
             );
+            if (nextOperator === "=") {
+                this.setState({finalResult: newValue});
+            }
 
-            this.setState({
-                value: newValue,
-                displayvalue: newValue
-            });
+            this.setState(
+                {
+                    value: newValue,
+                    displayvalue: newValue,
+                    formerResults:
+                        formerResults.length === 0
+                            ? [nextOperator, newValue]
+                            : [
+                                  nextOperator,
+                                  ...formerResults,
+                                  nextOperator,
+                                  newValue
+                              ]
+                },
+                () => console.log(formerResults)
+            );
         }
-
         this.setState({
             waitingForOperand: true,
             operator: nextOperator
@@ -110,7 +127,8 @@ class Calculator extends Component {
             operators,
             displayvalue,
             savedResults,
-            formerResults
+            formerResults,
+            finalResult
         } = this.state;
         return (
             <section className="Calculator">
@@ -125,8 +143,9 @@ class Calculator extends Component {
                 <Results
                     value={value}
                     savedResults={savedResults}
-                    formerResults={formerResults}
+                    finalResult={finalResult}
                 />
+                <FormerResults formerResults={formerResults} />
             </section>
         );
     }

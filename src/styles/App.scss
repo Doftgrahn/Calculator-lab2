@@ -1,20 +1,28 @@
+//Colors
+$color-green: #3FBA8B;
+$color-red: #F55536;
+$color-yellow: #E7BB41;
+$color-white: #EAFFDA;
+$color-black: #101419; //spacing
+$regular-spacing: 20px;
+
 .Calculator {
     width: 50%;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    background-color: lightblue;
+    background-color: $color-green;
     margin: 0 auto;
     border-radius: 20px;
-    box-shadow: 2px 2px black;
+    box-shadow: 2px 2px $color-black;
     align-items: flex-start;
     flex-wrap: wrap;
 
     h1 {
         font-weight: bold;
-        letter-spacing: 2px;
+        letter-spacing: 6px;
         margin: 0;
-        border-bottom: 10px solid black;
+        border-bottom: 10px solid $color-black;
     }
 
     .input__wrapper {
@@ -26,11 +34,11 @@
 
         label {
             margin-right: 20px;
-            border-bottom: 5px solid black;
+            border-bottom: 5px solid $color-red;
         }
 
         .inputField {
-            border: 1px solid #eee;
+            border: 1px solid $color-white;
             border-left: 3px solid;
             border-radius: 5px;
             height: 100%;
@@ -55,13 +63,13 @@
     button {
         transition: 0.2s;
         text-align: center;
-        font-size: 16px;
+        font-size: 18px;
         padding: 0 10px;
         margin-left: 6px;
         cursor: pointer;
         border: 1px transparent;
-        background-image: linear-gradient(to bottom, #eb94d0, #2079b0);
-
+        background-color: $color-white;
+        //background-image: linear-gradient(to bottom, $color-yellow, $color-red);
         &:hover {
             border: 1px transparent;
             transform: scale(1.1);
@@ -72,7 +80,7 @@
         box-shadow: 2px 2px black;
         margin-top: 20px;
         border-radius: 20px;
-        background-color: #b3416a;
+        background-color: $color-yellow;
         padding: 20px;
     }
 
@@ -99,6 +107,26 @@
 .memory {
     margin-left: auto;
 }
+
 .active {
     box-shadow: 1px 1px black;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    span {
+        background-color: $color-yellow;
+        padding: 0 20px;
+
+    }
+
+    li {
+        background-color: $color-white;
+        margin-left: 5px;
+        padding: 10px;
+    }
 }
