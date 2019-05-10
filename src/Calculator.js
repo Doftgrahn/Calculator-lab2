@@ -6,7 +6,7 @@ import LogicButtons from "./components/LogicButtons";
 import Results from "./components/Results";
 
 const CalculatorOperations = {
-    "+": (previousValue, nextValue) => previousValue + nextValue,
+    "+": (previousValue, nextValue) => previousValue + +nextValue,
     "-": (previousValue, nextValue) => previousValue - nextValue,
     "/": (previousValue, nextValue) => previousValue / nextValue,
     "*": (previousValue, nextValue) => previousValue * nextValue,
@@ -30,7 +30,8 @@ class Calculator extends Component {
             {oper: "M+", event: () => this.mPlus()},
             {oper: "M-", event: () => this.mMinus()}
         ],
-        savedResults: null
+        savedResults: null,
+        formerResults: []
     };
 
     componentDidMount() {
@@ -65,7 +66,7 @@ class Calculator extends Component {
     };
 
     performOperation = nextOperator => {
-        const {displayvalue, value, operator} = this.state;
+        const {displayvalue, value, operator, formerResults} = this.state;
         const inputValue = displayvalue;
 
         if (value === null) {
@@ -104,7 +105,13 @@ class Calculator extends Component {
     };
 
     render() {
-        const {value, operators, displayvalue, savedResults} = this.state;
+        const {
+            value,
+            operators,
+            displayvalue,
+            savedResults,
+            formerResults
+        } = this.state;
         return (
             <section className="Calculator">
                 <h1>Calculator</h1>
@@ -115,7 +122,11 @@ class Calculator extends Component {
                     value={value}
                 />
                 <LogicButtons operators={operators} />
-                <Results value={value} savedResults={savedResults} />
+                <Results
+                    value={value}
+                    savedResults={savedResults}
+                    formerResults={formerResults}
+                />
             </section>
         );
     }
