@@ -1,6 +1,6 @@
 import React from "react";
 
-const Input = ({displayvalue, changeInput, numberInputRef}) => {
+const Input = ({value, displayvalue, changeInput, numberInputRef}) => {
     return (
         <div className="input__wrapper">
             <label htmlFor="inputValue">Funky Calculator</label>
@@ -11,7 +11,7 @@ const Input = ({displayvalue, changeInput, numberInputRef}) => {
                 type="text"
                 id="inputValue"
                 placeholder="Calculate"
-                displayvalue={displayvalue}
+                value={displayvalue}
                 onChange={changeInput}
             />
         </div>

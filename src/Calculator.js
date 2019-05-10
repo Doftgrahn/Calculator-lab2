@@ -27,38 +27,46 @@ class Calculator extends Component {
             {oper: "/", event: () => this.performOperation("/")},
             {oper: "*", event: () => this.performOperation("*")},
             {oper: "CE", event: () => this.resetValue()},
-            {oper: "M+"},
-            {oper: "M-"}
-        ]
+            {oper: "M+", event: () => this.mPlus()},
+            {oper: "M-", event: () => this.mMinus()}
+        ],
+        savedResults: null
     };
 
     componentDidMount() {
         this.numberInput.current.focus();
     }
+
     resetValue = () => {
-        this.setState({value: 0, displayvalue: "0"});
-        this.numberInput.current.focus();
+        this.setState({
+            value: null,
+            displayvalue: "0",
+            operator: null,
+            waitingForOperand: false
+        });
+        this.numberInput.current.select();
     };
 
     changeInputValue = event => {
         let {waitingForOperand, displayvalue} = this.state;
         if (waitingForOperand) {
             this.setState({
-                displayvalue: String(event.target.value),
+                displayvalue: event.target.value,
                 waitingForOperand: false
             });
+        } else {
+            this.setState({
+                displayvalue:
+                    displayvalue === "0"
+                        ? +event.target.value
+                        : +event.target.value
+            });
         }
-        this.setState({
-            displayvalue:
-                displayvalue === "0"
-                    ? event.target.value
-                    : (displayvalue = +event.target.value)
-        });
     };
 
     performOperation = nextOperator => {
         const {displayvalue, value, operator} = this.state;
-        const inputValue = parseFloat(displayvalue);
+        const inputValue = displayvalue;
 
         if (value === null) {
             this.setState({value: inputValue});
@@ -71,21 +79,32 @@ class Calculator extends Component {
             );
 
             this.setState({
-                value: newValue
+                value: newValue,
+                displayvalue: newValue
             });
         }
-        this.setState(
-            {
-                waitingForOperand: true,
-                operator: nextOperator
-            },
-            () => console.log(operator)
-        );
-        this.numberInput.current.focus();
+
+        this.setState({
+            waitingForOperand: true,
+            operator: nextOperator
+        });
+        this.numberInput.current.select();
+    };
+
+    mPlus = () => {
+        let {value} = this.state;
+        this.setState({savedResults: value});
+        this.numberInput.current.select();
+    };
+
+    mMinus = () => {
+        let {savedResults} = this.state;
+        this.setState({displayvalue: savedResults});
+        this.numberInput.current.select();
     };
 
     render() {
-        const {value, operators, displayvalue} = this.state;
+        const {value, operators, displayvalue, savedResults} = this.state;
         return (
             <section className="Calculator">
                 <h1>Calculator</h1>
@@ -93,16 +112,13 @@ class Calculator extends Component {
                     numberInputRef={this.numberInput}
                     displayvalue={displayvalue}
                     changeInput={this.changeInputValue}
+                    value={value}
                 />
                 <LogicButtons operators={operators} />
-                <Results value={value} />
+                <Results value={value} savedResults={savedResults} />
             </section>
         );
     }
 }
 
 export default Calculator;
-
-//this.setState({value: ""});
-//this.numberInput.current.focus();
-//let listsTogether = [...calculateValue, value];
