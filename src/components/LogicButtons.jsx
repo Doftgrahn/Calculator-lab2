@@ -1,8 +1,13 @@
 import React from "react";
 
-const LogicButtons = ({operators}) => {
+const LogicButtons = ({operators, operator}) => {
+    console.log(operator);
     const oper = operators.map((op, i) => (
-        <button key={i} onClick={op.event}>
+        <button
+            className={op.oper === operator ? "btnActive" : ""}
+            key={i}
+            onClick={op.event}
+        >
             {op.oper}
         </button>
     ));

@@ -24,11 +24,11 @@ class Calculator extends Component {
         operator: null,
         waitingForOperand: false,
         operators: [
-            {oper: "+", event: () => this.performOperation("+")},
-            {oper: "-", event: () => this.performOperation("-")},
-            {oper: "=", event: () => this.performOperation("=")},
-            {oper: "/", event: () => this.performOperation("/")},
-            {oper: "*", event: () => this.performOperation("*")},
+            {oper: "+", event: event => this.performOperation("+", event)},
+            {oper: "-", event: event => this.performOperation("-", event)},
+            {oper: "=", event: event => this.performOperation("=", event)},
+            {oper: "/", event: event => this.performOperation("/", event)},
+            {oper: "*", event: event => this.performOperation("*", event)},
             {oper: "CE", event: () => this.resetValue()},
             {oper: "M+", event: () => this.mPlus()},
             {oper: "M-", event: () => this.mMinus()}
@@ -54,7 +54,7 @@ class Calculator extends Component {
     };
 
     changeInputValue = inputValue => {
-        let {waitingForOperand, displayvalue} = this.state;
+        const {waitingForOperand, displayvalue} = this.state;
         if (waitingForOperand) {
             this.setState({
                 displayvalue: inputValue,
@@ -67,35 +67,31 @@ class Calculator extends Component {
         }
     };
 
-    performOperation = nextOperator => {
+    performOperation = (nextOperator, event) => {
         const {displayvalue, value, operator, formerResults} = this.state;
 
-        if (value === null && operator === null) {
-            this.setState({value: displayvalue, displayvalue: value});
+        if (!value) {
+            this.setState({value: displayvalue});
         } else if (operator) {
-            const currentValue = value || 0;
             const newValue = CalculatorOperations[operator](
-                currentValue,
+                value,
                 displayvalue
             );
             if (nextOperator === "=") {
                 this.setState({finalResult: newValue});
             }
+            const history =
+                formerResults.length === 0
+                    ? [nextOperator, newValue]
+                    : [...formerResults, nextOperator, newValue];
 
             this.setState({
                 value: newValue,
-                displayvalue: newValue,
-                formerResults:
-                    formerResults.length === 0
-                        ? [nextOperator, newValue]
-                        : [
-                              nextOperator,
-                              ...formerResults,
-                              nextOperator,
-                              newValue
-                          ]
+                displayvalue: "",
+                formerResults: history
             });
         }
+
         this.setState({
             waitingForOperand: true,
             operator: nextOperator
@@ -122,8 +118,9 @@ class Calculator extends Component {
                     displayvalue={this.state.displayvalue}
                     changeInput={this.changeInputValue}
                     value={this.state.value}
+                    chosenOperator={this.state.operator}
                 />
-                <LogicButtons operators={this.state.operators} />
+                <LogicButtons operator={this.state.operator} operators={this.state.operators} />
                 <Results
                     value={this.state.value}
                     savedResults={this.state.savedResults}

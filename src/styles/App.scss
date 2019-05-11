@@ -75,6 +75,9 @@ $regular-spacing: 20px;
             transform: scale(1.1);
         }
     }
+    .btnActive {
+        background-color: $color-red;
+    }
 
     .operator_wrapper {
         box-shadow: 2px 2px black;
@@ -113,6 +116,11 @@ $regular-spacing: 20px;
 }
 
 ul {
+    overflow: scroll;
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    left: 10px;
     list-style-type: none;
     display: flex;
     flex-direction: row;
@@ -121,12 +129,10 @@ ul {
     span {
         background-color: $color-yellow;
         padding: 0 20px;
-
     }
 
     li {
-        background-color: $color-white;
-        margin-left: 5px;
-        padding: 10px;
+        background-color: $color-yellow;
+        padding: 0 20px;
     }
 }
