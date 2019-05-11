@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import "./styles/App.scss";
+
 import Input from "./components/Input";
 import LogicButtons from "./components/LogicButtons";
 
@@ -47,25 +48,21 @@ class Calculator extends Component {
             displayvalue: "0",
             operator: null,
             waitingForOperand: false,
-            savedResults: null,
             formerResults: []
         });
         this.numberInput.current.select();
     };
 
-    changeInputValue = event => {
+    changeInputValue = inputValue => {
         let {waitingForOperand, displayvalue} = this.state;
         if (waitingForOperand) {
             this.setState({
-                displayvalue: event.target.value,
+                displayvalue: inputValue,
                 waitingForOperand: false
             });
         } else {
             this.setState({
-                displayvalue:
-                    displayvalue === "0"
-                        ? +event.target.value
-                        : +event.target.value
+                displayvalue: displayvalue === "0" ? +inputValue : +inputValue
             });
         }
     };
@@ -74,7 +71,7 @@ class Calculator extends Component {
         const {displayvalue, value, operator, formerResults} = this.state;
 
         if (value === null && operator === null) {
-            this.setState({value: displayvalue});
+            this.setState({value: displayvalue, displayvalue: value});
         } else if (operator) {
             const currentValue = value || 0;
             const newValue = CalculatorOperations[operator](
@@ -85,22 +82,19 @@ class Calculator extends Component {
                 this.setState({finalResult: newValue});
             }
 
-            this.setState(
-                {
-                    value: newValue,
-                    displayvalue: newValue,
-                    formerResults:
-                        formerResults.length === 0
-                            ? [nextOperator, newValue]
-                            : [
-                                  nextOperator,
-                                  ...formerResults,
-                                  nextOperator,
-                                  newValue
-                              ]
-                },
-                () => console.log(formerResults)
-            );
+            this.setState({
+                value: newValue,
+                displayvalue: newValue,
+                formerResults:
+                    formerResults.length === 0
+                        ? [nextOperator, newValue]
+                        : [
+                              nextOperator,
+                              ...formerResults,
+                              nextOperator,
+                              newValue
+                          ]
+            });
         }
         this.setState({
             waitingForOperand: true,
@@ -110,42 +104,32 @@ class Calculator extends Component {
     };
 
     mPlus = () => {
-        let {value} = this.state;
-        this.setState({savedResults: value});
+        this.setState({savedResults: this.state.value});
         this.numberInput.current.select();
     };
 
     mMinus = () => {
-        let {savedResults} = this.state;
-        this.setState({displayvalue: savedResults});
+        this.setState({displayvalue: this.state.savedResults});
         this.numberInput.current.select();
     };
 
     render() {
-        const {
-            value,
-            operators,
-            displayvalue,
-            savedResults,
-            formerResults,
-            finalResult
-        } = this.state;
         return (
             <section className="Calculator">
                 <h1>Calculator</h1>
                 <Input
                     numberInputRef={this.numberInput}
-                    displayvalue={displayvalue}
+                    displayvalue={this.state.displayvalue}
                     changeInput={this.changeInputValue}
-                    value={value}
+                    value={this.state.value}
                 />
-                <LogicButtons operators={operators} />
+                <LogicButtons operators={this.state.operators} />
                 <Results
-                    value={value}
-                    savedResults={savedResults}
-                    finalResult={finalResult}
+                    value={this.state.value}
+                    savedResults={this.state.savedResults}
+                    finalResult={this.state.finalResult}
                 />
-                <FormerResults formerResults={formerResults} />
+                <FormerResults formerResults={this.state.formerResults} />
             </section>
         );
     }
