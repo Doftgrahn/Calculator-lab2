@@ -29,9 +29,9 @@ class Calculator extends Component {
             {oper: "=", event: event => this.performOperation("=", event)},
             {oper: "/", event: event => this.performOperation("/", event)},
             {oper: "*", event: event => this.performOperation("*", event)},
-            {oper: "CE", event: () => this.resetValue()},
-            {oper: "M+", event: () => this.mPlus()},
-            {oper: "M-", event: () => this.mMinus()}
+            {oper: "C", event: () => this.resetValue("CE")},
+            {oper: "M+", event: () => this.mPlus("M+")},
+            {oper: "M-", event: () => this.mMinus("M-")}
         ],
         savedResults: null,
         formerResults: [],
@@ -39,22 +39,32 @@ class Calculator extends Component {
     };
 
     componentDidMount() {
+        this.numberInput.current.focus();
         this.numberInput.current.select();
     }
 
     resetValue = () => {
+        this.setState({operators:this.state.operators.map(p => p.oper === "CA"  ? {...p, oper:'C'}: p )})
+
         this.setState({
             value: null,
-            displayvalue: "0",
+            displayvalue: 0,
             operator: null,
             waitingForOperand: false,
             formerResults: []
         });
+        this.numberInput.current.focus();
         this.numberInput.current.select();
     };
 
     changeInputValue = inputValue => {
         const {waitingForOperand, displayvalue} = this.state;
+        if(displayvalue > 0 || displayvalue === "0"){
+        this.setState({operators:this.state.operators.map(p => p.oper === "C"  ? {...p, oper:'CA'}: p )})
+} else {
+    this.setState({operators:this.state.operators.map(p => p.oper === "CA"  ? {...p, oper:'C'}: p )})
+}
+
         if (waitingForOperand) {
             this.setState({
                 displayvalue: inputValue,
@@ -69,6 +79,7 @@ class Calculator extends Component {
 
     performOperation = (nextOperator, event) => {
         const {displayvalue, value, operator, formerResults} = this.state;
+
 
         if (!value) {
             this.setState({value: displayvalue});
@@ -87,7 +98,7 @@ class Calculator extends Component {
 
             this.setState({
                 value: newValue,
-                displayvalue: "",
+                displayvalue: "0",
                 formerResults: history
             });
         }
@@ -96,16 +107,19 @@ class Calculator extends Component {
             waitingForOperand: true,
             operator: nextOperator
         });
+        this.numberInput.current.focus();
         this.numberInput.current.select();
     };
 
     mPlus = () => {
         this.setState({savedResults: this.state.value});
+        this.numberInput.current.focus();
         this.numberInput.current.select();
     };
 
-    mMinus = () => {
+    mMinus = mMinus => {
         this.setState({displayvalue: this.state.savedResults});
+        this.numberInput.current.focus();
         this.numberInput.current.select();
     };
 
@@ -120,7 +134,10 @@ class Calculator extends Component {
                     value={this.state.value}
                     chosenOperator={this.state.operator}
                 />
-                <LogicButtons operator={this.state.operator} operators={this.state.operators} />
+                <LogicButtons
+                    operator={this.state.operator}
+                    operators={this.state.operators}
+                />
                 <Results
                     value={this.state.value}
                     savedResults={this.state.savedResults}
