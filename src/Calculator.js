@@ -42,9 +42,13 @@ class Calculator extends Component {
         this.numberInput.current.focus();
         this.numberInput.current.select();
     }
-
+    
     resetValue = () => {
-        this.setState({operators:this.state.operators.map(p => p.oper === "CA"  ? {...p, oper:'C'}: p )})
+        this.setState({
+            operators: this.state.operators.map(
+                p => (p.oper === "CA" ? {...p, oper: "C"} : p)
+            )
+        });
 
         this.setState({
             value: null,
@@ -59,11 +63,19 @@ class Calculator extends Component {
 
     changeInputValue = inputValue => {
         const {waitingForOperand, displayvalue} = this.state;
-        if(displayvalue > 0 || displayvalue === "0"){
-        this.setState({operators:this.state.operators.map(p => p.oper === "C"  ? {...p, oper:'CA'}: p )})
-} else {
-    this.setState({operators:this.state.operators.map(p => p.oper === "CA"  ? {...p, oper:'C'}: p )})
-}
+        if (displayvalue > 0 || displayvalue === "0") {
+            this.setState({
+                operators: this.state.operators.map(
+                    p => (p.oper === "C" ? {...p, oper: "CA"} : p)
+                )
+            });
+        } else {
+            this.setState({
+                operators: this.state.operators.map(
+                    p => (p.oper === "CA" ? {...p, oper: "C"} : p)
+                )
+            });
+        }
 
         if (waitingForOperand) {
             this.setState({
@@ -80,7 +92,6 @@ class Calculator extends Component {
     performOperation = (nextOperator, event) => {
         const {displayvalue, value, operator, formerResults} = this.state;
 
-
         if (!value) {
             this.setState({value: displayvalue});
         } else if (operator) {
@@ -89,8 +100,16 @@ class Calculator extends Component {
                 displayvalue
             );
             if (nextOperator === "=") {
-                this.setState({finalResult: newValue});
+                this.setState({
+                    operators: this.state.operators.map(
+                        p => (p.oper === "CA" ? {...p, oper: "C"} : p)
+                    )
+                });
+
+                this.setState({finalResult: newValue,
+                    formerResults: [...formerResults,newValue]});
             }
+
             const history =
                 formerResults.length === 0
                     ? [nextOperator, newValue]
@@ -98,7 +117,7 @@ class Calculator extends Component {
 
             this.setState({
                 value: newValue,
-                displayvalue: "0",
+                displayvalue: newValue,
                 formerResults: history
             });
         }
