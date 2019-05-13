@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import "./styles/App.scss";
 
-import Title from './components/Title';
+import Title from "./components/Title";
 import Input from "./components/Input";
 import LogicButtons from "./components/LogicButtons";
 import Results from "./components/Results";
@@ -27,9 +27,7 @@ class Calculator extends Component {
             {oper: "=", event: () => this.performOperation("=")},
             {oper: "/", event: () => this.performOperation("/")},
             {oper: "*", event: () => this.performOperation("*")},
-            {oper: "%", event: () => this.performOperation("%")},
-            {oper: "π", event: () => this.performOperation("π")},
-            {oper: "C", event: () => this.resetValue('C')},
+            {oper: "C", event: () => this.resetValue("C")},
             {oper: "M+", event: () => this.mPlus("M+")},
             {oper: "M-", event: () => this.mMinus("M-")}
         ]
@@ -116,7 +114,7 @@ class Calculator extends Component {
             const history =
                 formerResults.length === 0
                     ? [nextOperator, newValue]
-                    : [...formerResults, nextOperator, newValue];
+                    : [...formerResults, newValue];
 
             this.setState({
                 value: newValue,
@@ -156,24 +154,24 @@ class Calculator extends Component {
     render() {
         return (
             <section className="Calculator">
-            <div className={this.state.displayvalue === "0" ? "shaky" : '' }>
-            <Title displayvalue={this.state.displayvalue}/>
-                <Input
-                    numberInputRef={this.numberInput}
-                    displayvalue={this.state.displayvalue}
-                    changeInput={this.changeInputValue}
-                    value={this.state.value}
-                />
-                <LogicButtons
-                    operator={this.state.operator}
-                    operators={this.state.operators}
-                />
-                <Results
-                    value={this.state.value}
-                    savedResults={this.state.savedResults}
-                    finalResult={this.state.finalResult}
-                />
-                <FormerResults formerResults={this.state.formerResults} />
+                <div className={this.state.displayvalue === "0" ? "shaky" : ""}>
+                    <Title displayvalue={this.state.displayvalue} />
+                    <Input
+                        numberInputRef={this.numberInput}
+                        displayvalue={this.state.displayvalue}
+                        changeInput={this.changeInputValue}
+                        value={this.state.value}
+                    />
+                    <LogicButtons
+                        operator={this.state.operator}
+                        operators={this.state.operators}
+                    />
+                    <Results
+                        value={this.state.value}
+                        savedResults={this.state.savedResults}
+                        finalResult={this.state.finalResult}
+                    />
+                    <FormerResults formerResults={this.state.formerResults} />
                 </div>
             </section>
         );
