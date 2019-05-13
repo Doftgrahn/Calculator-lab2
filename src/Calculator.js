@@ -3,18 +3,11 @@ import "./styles/App.scss";
 
 import Input from "./components/Input";
 import LogicButtons from "./components/LogicButtons";
-
 import Results from "./components/Results";
-
 import FormerResults from "./components/FormerResults";
 
-const CalculatorOperations = {
-    "+": (previousValue, nextValue) => previousValue + +nextValue,
-    "-": (previousValue, nextValue) => previousValue - nextValue,
-    "/": (previousValue, nextValue) => previousValue / nextValue,
-    "*": (previousValue, nextValue) => previousValue * nextValue,
-    "=": (previousValue, nextValue) => nextValue
-};
+/*this stuff does the calculations. yäy*/
+import CalculatorOperations from "./shared/CalculatorOperations";
 
 class Calculator extends Component {
     numberInput = React.createRef();
@@ -23,26 +16,26 @@ class Calculator extends Component {
         displayvalue: "0",
         operator: null,
         waitingForOperand: false,
-        operators: [
-            {oper: "+", event: event => this.performOperation("+", event)},
-            {oper: "-", event: event => this.performOperation("-", event)},
-            {oper: "=", event: event => this.performOperation("=", event)},
-            {oper: "/", event: event => this.performOperation("/", event)},
-            {oper: "*", event: event => this.performOperation("*", event)},
-            {oper: "C", event: () => this.resetValue("CE")},
-            {oper: "M+", event: () => this.mPlus("M+")},
-            {oper: "M-", event: () => this.mMinus("M-")}
-        ],
         savedResults: null,
         formerResults: [],
-        finalResult: null
+        finalResult: null,
+        operators: [
+            {oper: "+", event: () => this.performOperation("+")},
+            {oper: "-", event: () => this.performOperation("-")},
+            {oper: "=", event: () => this.performOperation("=")},
+            {oper: "/", event: () => this.performOperation("/")},
+            {oper: "*", event: () => this.performOperation("*")},
+            {oper: "C", event: () => this.resetValue()},
+            {oper: "M+", event: () => this.mPlus("M+")},
+            {oper: "M-", event: () => this.mMinus("M-")}
+        ]
     };
 
     componentDidMount() {
         this.numberInput.current.focus();
         this.numberInput.current.select();
     }
-    
+
     resetValue = () => {
         this.setState({
             operators: this.state.operators.map(
@@ -63,6 +56,8 @@ class Calculator extends Component {
 
     changeInputValue = inputValue => {
         const {waitingForOperand, displayvalue} = this.state;
+        //change reset to 'C' or 'CA'
+
         if (displayvalue > 0 || displayvalue === "0") {
             this.setState({
                 operators: this.state.operators.map(
@@ -77,6 +72,7 @@ class Calculator extends Component {
             });
         }
 
+        //change input
         if (waitingForOperand) {
             this.setState({
                 displayvalue: inputValue,
@@ -89,7 +85,7 @@ class Calculator extends Component {
         }
     };
 
-    performOperation = (nextOperator, event) => {
+    performOperation = nextOperator => {
         const {displayvalue, value, operator, formerResults} = this.state;
 
         if (!value) {
@@ -106,8 +102,10 @@ class Calculator extends Component {
                     )
                 });
 
-                this.setState({finalResult: newValue,
-                    formerResults: [...formerResults,newValue]});
+                this.setState({
+                    finalResult: newValue,
+                    formerResults: [...formerResults, newValue]
+                });
             }
 
             const history =
@@ -121,11 +119,11 @@ class Calculator extends Component {
                 formerResults: history
             });
         }
-
         this.setState({
             waitingForOperand: true,
             operator: nextOperator
         });
+
         this.numberInput.current.focus();
         this.numberInput.current.select();
     };
@@ -136,7 +134,7 @@ class Calculator extends Component {
         this.numberInput.current.select();
     };
 
-    mMinus = mMinus => {
+    mMinus = () => {
         this.setState({displayvalue: this.state.savedResults});
         this.numberInput.current.focus();
         this.numberInput.current.select();

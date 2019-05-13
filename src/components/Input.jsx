@@ -10,7 +10,6 @@ const Input = ({displayvalue, changeInput, numberInputRef}) => {
                 ref={numberInputRef}
                 type="text"
                 id="inputValue"
-                placeholder="Calculate"
                 value={displayvalue}
                 onChange={event => changeInput(event.target.value)}
             />
