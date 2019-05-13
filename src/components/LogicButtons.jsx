@@ -3,7 +3,7 @@ import React from "react";
 const LogicButtons = ({operators, operator}) => {
     const oper = operators.map((op, i) => (
         <button
-            className={op.oper === operator ? "btnActive" : ""}
+            className={op.oper === operator ? "btnActive shaky" : ""}
             key={i}
             onClick={op.event}
         >

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import "./styles/App.scss";
 
+import Title from './components/Title';
 import Input from "./components/Input";
 import LogicButtons from "./components/LogicButtons";
 import Results from "./components/Results";
@@ -11,6 +12,7 @@ import CalculatorOperations from "./shared/CalculatorOperations";
 
 class Calculator extends Component {
     numberInput = React.createRef();
+
     state = {
         value: null,
         displayvalue: "0",
@@ -25,7 +27,9 @@ class Calculator extends Component {
             {oper: "=", event: () => this.performOperation("=")},
             {oper: "/", event: () => this.performOperation("/")},
             {oper: "*", event: () => this.performOperation("*")},
-            {oper: "C", event: () => this.resetValue()},
+            {oper: "%", event: () => this.performOperation("%")},
+            {oper: "π", event: () => this.performOperation("π")},
+            {oper: "C", event: () => this.resetValue('C')},
             {oper: "M+", event: () => this.mPlus("M+")},
             {oper: "M-", event: () => this.mMinus("M-")}
         ]
@@ -58,7 +62,7 @@ class Calculator extends Component {
         const {waitingForOperand, displayvalue} = this.state;
         //change reset to 'C' or 'CA'
 
-        if (displayvalue > 0 || displayvalue === "0") {
+        if (displayvalue > 0 || displayvalue === "0" || inputValue === 0) {
             this.setState({
                 operators: this.state.operators.map(
                     p => (p.oper === "C" ? {...p, oper: "CA"} : p)
@@ -80,7 +84,8 @@ class Calculator extends Component {
             });
         } else {
             this.setState({
-                displayvalue: displayvalue === "0" ? +inputValue : +inputValue
+                displayvalue: displayvalue === "0" ? +inputValue : +inputValue,
+                waitingForOperand: true
             });
         }
     };
@@ -129,13 +134,21 @@ class Calculator extends Component {
     };
 
     mPlus = () => {
-        this.setState({savedResults: this.state.value});
+        if (!this.state.value) {
+            this.setState({savedResults: this.state.displayvalue});
+        } else {
+            this.setState({savedResults: this.state.value});
+        }
         this.numberInput.current.focus();
         this.numberInput.current.select();
     };
 
     mMinus = () => {
-        this.setState({displayvalue: this.state.savedResults});
+        if (!this.state.savedResults) {
+            throw new Error("Shut up and dance with me! lalalalalalalal");
+        } else {
+            this.setState({displayvalue: this.state.savedResults});
+        }
         this.numberInput.current.focus();
         this.numberInput.current.select();
     };
@@ -143,13 +156,13 @@ class Calculator extends Component {
     render() {
         return (
             <section className="Calculator">
-                <h1>Calculator</h1>
+            <div className={this.state.displayvalue === "0" ? "shaky" : '' }>
+            <Title displayvalue={this.state.displayvalue}/>
                 <Input
                     numberInputRef={this.numberInput}
                     displayvalue={this.state.displayvalue}
                     changeInput={this.changeInputValue}
                     value={this.state.value}
-                    chosenOperator={this.state.operator}
                 />
                 <LogicButtons
                     operator={this.state.operator}
@@ -161,6 +174,7 @@ class Calculator extends Component {
                     finalResult={this.state.finalResult}
                 />
                 <FormerResults formerResults={this.state.formerResults} />
+                </div>
             </section>
         );
     }

@@ -75,6 +75,7 @@ $regular-spacing: 20px;
             transform: scale(1.1);
         }
     }
+
     .btnActive {
         background-color: $color-red;
     }
@@ -117,10 +118,12 @@ $regular-spacing: 20px;
 
 ul {
     overflow: scroll;
-    height: 300px;
-    width: 300px;
+    min-height: 300px;
+    min-width: 300px;
+    z-index: -11;
     position: absolute;
-    left: 10px;
+    right: 500px;
+    top: 0;
     list-style-type: none;
     display: flex;
     flex-direction: row;
@@ -136,3 +139,35 @@ ul {
         padding: 0 20px;
     }
 }
+
+.shaky {
+    transition: 0.2s;
+    animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-origin: right;
+}
+@keyframes shake {
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0) rotate(20deg);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0) rotate(150deg);
+    }
+}
+//
